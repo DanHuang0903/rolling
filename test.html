@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container-fluid" style="margin: 3em; margin-left: 5em;">
+		<div class="row">
+			<div class="col-lg-5 jumbotron">
+				<h1 class="display-4">Player 1 <span style="font-size: 0.5em; float: right;"> total points: <span id="total1" style="color:red;">0</span></span></h1>
+				<hr class="my-4">
+				<button class="btn btn-primary" id="btn1" onclick="clicked(this)">Roll Dice!</button>
+				<h1 class="display-4" id="point1" style="text-align: center"></h1>
+			</div>
+
+			<div class="col-lg-1"></div>
+
+			<div class="col-lg-5 jumbotron">
+				<h1 class="display-4">Player 2 <span style="font-size: 0.5em; float: right;"> total points: <span id="total2" style="color:red;">0</span></span></h1>
+				<hr class="my-4">
+				<button class="btn btn-primary" id="btn2" onclick="clicked(this)">Roll Dice!</button>
+				<h1 class="display-4" id="point2" style="text-align: center"></h1>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<h1 class="display-4" style="text-align: center">Round <span id="round"></span></h1>
+		<h1 class="display-4" style="text-align: center">Winner: <span id="winner"></span></h1>
+	</div>
+
+	<script type="text/javascript">
+		var btn1 = document.getElementById("btn1");
+		var btn2 = document.getElementById("btn2");
+		var flag = 0;
+		var turn = 0;
+
+		function clicked(btn){
+			btn.innerHTML = "Wait";
+			btn.disabled = true;
+			
+			changeBtn(btn);
+			flag ++;
+			turn += flag%2;
+			rollDice(btn);
+			
+			document.getElementById("round").innerHTML = turn;
+			
+		}
+
+
+		function changeBtn(btn){
+			if(btn.id == "btn1"){
+				btn2.innerHTML = "Roll Dice!";
+				btn2.disabled = false;
+			}
+			else
+			{
+				btn1.innerHTML = "Roll Dice!";
+				btn1.disabled = false;
+			}
+		}
+
+		function rollDice(btn){
+			var point = Math.floor((Math.random()*10)+1);
+			var sum1 = document.getElementById("total1");
+			var sum2 = document.getElementById("total2");
+			var point1 = document.getElementById("point1");
+			var point2 = document.getElementById("point2");
+			btn.id == "btn1"? point1.innerHTML = "Round " + turn + ": " + point : point2.innerHTML = "Round " + turn + ": " + point;
+			btn.id == "btn1"? sum1.innerHTML =  parseInt(sum1.innerHTML) + point : sum2.innerHTML =  parseInt(sum2.innerHTML) + point;
+
+			if(flag%2 == 0){
+				var win = result(sum1, sum2);
+				console.log(win);
+				document.getElementById("winner").innerHTML = win;
+			}
+			else{
+				document.getElementById("winner").innerHTML = "";
+			}
+		}
+
+		function result(sum1, sum2){
+			if(parseInt(sum1.innerHTML) == parseInt(sum2.innerHTML) )
+				return "Deuce";
+			else{
+				parseInt(sum1.innerHTML) > parseInt(sum2.innerHTML) ? winner =  "Player 1" : winner =  "Player 2";
+				return winner;
+			}
+		}
+
+	</script>
+</body>
+</html>
