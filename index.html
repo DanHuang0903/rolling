@@ -6,7 +6,16 @@
 </head>
 <body>
 	<div class="container-fluid" style="margin: 3em; margin-left: 5em;">
-		<div class="row">
+		<button class="btn btn-outline-success" style="margin-bottom: 0.3em;" onclick="location.reload()">Restart</button>
+		
+
+		 <div class="row" >
+		 	<div class="col-lg-4"></div>
+		 	<div class="col-lg-2"><h3 style="text-align: right;color:#666666;" id="count_label"><span id="count"></span> rounds left.</h3></div>
+		 	<div class="col-lg-5"></div>
+		 </div>
+
+		<div class="row" style="margin-top: 2em;">
 			<div class="col-lg-5 jumbotron">
 				<h1 class="display-4">Player 1 <span style="font-size: 0.5em; float: right;"> total points: <span id="total1" style="color:red;">0</span></span></h1>
 				<hr class="my-4">
@@ -25,70 +34,131 @@
 		</div>
 	</div>
 
+
 	<div>
-		<h1 class="display-4" style="text-align: center">Round <span id="round"></span></h1>
-		<h1 class="display-4" style="text-align: center">Winner: <span id="winner"></span></h1>
+		<h1 class="display-4" style="text-align: center"><span id="round"></span></h1>
+		<h1 class="display-4" style="text-align: center"><span id="winner"></span></h1>
 	</div>
 
-	<script type="text/javascript">
-		var btn1 = document.getElementById("btn1");
-		var btn2 = document.getElementById("btn2");
-		var flag = 0;
-		var turn = 0;
+	<div class="container row" style="margin-top: 2em;">
+		<div class="col-lg-6"></div>
+		<div class="col-lg-6">
+			<table class="table table-striped table-hover table-condensed table-responsive" id="table" style="padding-left:5em;text-align: center;">        
+		    </table>
+	    </div>
+	</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" 
+crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" 
+crossorigin="anonymous"></script>
 
-		function clicked(btn){
-			btn.innerHTML = "Wait";
-			btn.disabled = true;
+    <script type="text/javascript">
+
+			var btn1 = document.getElementById("btn1");
+			var btn2 = document.getElementById("btn2");
+			var flag = 0;
+			var turn = 0;
+			var log = [];
+			var rounds = 5;
+			var counter = rounds;
+
 			
-			changeBtn(btn);
-			flag ++;
-			turn += flag%2;
-			rollDice(btn);
-			
-			document.getElementById("round").innerHTML = turn;
-			
-		}
+		  	$("#count").text(rounds);
+
+			function clicked(btn){
+				
+				btn.innerHTML = "Wait";
+				btn.disabled = true;
+				
+				changeBtn(btn);
+				flag ++;
+				turn += flag%2;
+				rollDice(btn);
+				
+				document.getElementById("round").innerHTML = "Round " + turn;
+				if(flag%2==0){
+					if (turn == rounds){
+						gameOver();
+						$("#count_label").text(" ");
+					}
+					else{
+						counter--;
+						$("#count").text(counter);
+					}
+				}
+
+			}
 
 
-		function changeBtn(btn){
-			if(btn.id == "btn1"){
-				btn2.innerHTML = "Roll Dice!";
-				btn2.disabled = false;
+			function changeBtn(btn){
+				if(btn.id == "btn1"){
+					btn2.innerHTML = "Roll Dice!";
+					btn2.disabled = false;
+				}
+				else
+				{
+					btn1.innerHTML = "Roll Dice!";
+					btn1.disabled = false;
+				}
 			}
-			else
-			{
-				btn1.innerHTML = "Roll Dice!";
-				btn1.disabled = false;
-			}
-		}
 
-		function rollDice(btn){
-			var point = Math.floor((Math.random()*10)+1);
-			var sum1 = document.getElementById("total1");
-			var sum2 = document.getElementById("total2");
-			var point1 = document.getElementById("point1");
-			var point2 = document.getElementById("point2");
-			btn.id == "btn1"? point1.innerHTML = "Round " + turn + ": " + point : point2.innerHTML = "Round " + turn + ": " + point;
-			btn.id == "btn1"? sum1.innerHTML =  parseInt(sum1.innerHTML) + point : sum2.innerHTML =  parseInt(sum2.innerHTML) + point;
+			function rollDice(btn){
+				var point = Math.floor((Math.random()*10)+1);
+				var sum1 = document.getElementById("total1");
+				var sum2 = document.getElementById("total2");
+				var point1 = document.getElementById("point1");
+				var point2 = document.getElementById("point2");
+				btn.id == "btn1"? point1.innerHTML = "Round " + turn + ": " + point : point2.innerHTML = "Round " + turn + ": " + point;
+				btn.id == "btn1"? sum1.innerHTML =  parseInt(sum1.innerHTML) + point : sum2.innerHTML =  parseInt(sum2.innerHTML) + point;
 
-			if(flag%2 == 0){
-				var win = result(sum1, sum2);
-				console.log(win);
-				document.getElementById("winner").innerHTML = win;
-			}
-			else{
-				document.getElementById("winner").innerHTML = "";
-			}
-		}
+				if(flag%2 == 0){
 
-		function result(sum1, sum2){
-			if(parseInt(sum1.innerHTML) == parseInt(sum2.innerHTML) )
-				return "Deuce";
-			else{
-				parseInt(sum1.innerHTML) > parseInt(sum2.innerHTML) ? winner =  "Player 1" : winner =  "Player 2";
-				return winner;
+					var win = result(sum1, sum2);
+					var turn_log = {}
+					turn_log['turn'] = turn;
+					turn_log['winner'] = win;
+					if(win == "Deuce")
+						turn_log['total'] = " -- ";
+					else
+						turn_log['total'] = win=="Player 1"? sum1.innerHTML : sum2.innerHTML;
+					log.push(turn_log);
+
+					console.log(log);
+
+					document.getElementById("winner").innerHTML = "Winner: " + win;
+				}
+				else{
+					document.getElementById("winner").innerHTML = "";
+				}
 			}
-		}
+
+			function result(sum1, sum2){
+				if(parseInt(sum1.innerHTML) == parseInt(sum2.innerHTML) )
+					return "Deuce";
+				else{
+					parseInt(sum1.innerHTML) > parseInt(sum2.innerHTML) ? winner =  "Player 1" : winner =  "Player 2";
+					return winner;
+				}
+			}
+
+			function gameOver(){
+				btn1.innerHTML = "Game Over";
+				btn1.disabled = true;
+				btn2.innerHTML = "Game Over";
+				btn2.disabled = true;
+				$("#round").text("Game Over");
+
+
+				$("#table").append('<tr><th>Round</th> <th>Winner</th> <th>Total Points</th></tr>');
+				
+				log.forEach(function(i){
+					$("#table").append('<tr><th>' + i['turn'] + '</th> <th>' +i['winner']+ '</th> <th>' + i['total'] + '</th></tr>');
+				});
+			}
+		
 
 	</script>
 </body>
