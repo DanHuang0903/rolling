@@ -1,0 +1,40 @@
+.playground{
+	margin: 3em; 
+	margin-left: 5em;
+}
+
+.restart{
+	margin-bottom: 0.3em;
+}
+
+.row{
+	margin-top: 2em;
+}
+
+#count_label{
+	text-align: right;color:#666666;
+}
+
+span.total{
+	font-size: 0.5em; 
+	float: right;
+}
+
+span.total_num{
+	font-size: 1em; 
+	float: right;
+	color:red;
+	}
+
+.points_num{
+	text-align: center;
+}
+
+.result{
+	text-align: center;
+}
+
+#tabel{
+	padding-left:5em;
+	text-align: center;
+}
